@@ -1,0 +1,75 @@
+
+// https://script.google.com/macros/s/AKfycbyV7OF3hDOJ12wVFiq-LagDRDksv_B1RD2D-Of-2MuQ-mIm6KLPnNXcB9bVj9gnjK30/exec?value1=11&value2=11&value3=11&value4=121
+
+
+//https://script.google.com/macros/s/AKfycbwWdQ8jGfrA322WLmO14b-NBKNLph3Bc-5Gr-AMSh8z8y2E22H0PFl31zmvFO-zkk9R/exec
+
+// https://script.google.com/macros/s/AKfycbyV7OF3hDOJ12wVFiq-LagDRDksv_B1RD2D-Of-2MuQ-mIm6KLPnNXcB9bVj9gnjK30/exec?getdata=10010011010011
+
+
+
+
+
+function doGet(e) 
+{ 
+Logger.log( JSON.stringify(e) );
+
+var result = 'Ok';
+var sheet_id = '1Q2b-qiYNAEXb49jNFdOXQ57i3VKBgDV3jpBdBJo0qiY'; 
+var sheet = SpreadsheetApp.openById(sheet_id).getActiveSheet();
+Logger.log(sheet.getLastRow());
+if ( e.parameter.getdata == "10010011010011") 
+{
+  var a = ['A','B','C','D','E','F'];
+  var b = [];
+  for(as in a){
+  var data = SpreadsheetApp
+                      .getActive()
+                      .getSheetByName('data')
+                      .getRange(a[as] + sheet.getLastRow())
+                      .getValue();
+  b[as] = data;
+  }
+
+  Logger.log( b );
+  
+  return ContentService.createTextOutput(data);
+} else if( e.parameter.value1 || e.parameter.value2 ) 
+{
+
+  var newRow = sheet.getLastRow() + 1; 
+  var rowData = [];
+  var Curr_Date = new Date(); 
+  rowData[0] = Curr_Date; 
+  var Curr_Time = Utilities.formatDate(Curr_Date, "Asia/Ho_Chi_Minh", 'HH:mm:ss');
+  rowData[1] = Curr_Time; 
+  for (var param in e.parameter)
+{
+    var value = e.parameter[param];
+    switch (param) 
+    {
+    case 'value1':
+    rowData[2] = parseFloat(value); 
+    break;
+    case 'value2':
+    rowData[3] = parseFloat(value); 
+    break;
+    case 'value3':
+    rowData[4] = parseFloat(value); 
+    break;
+    case 'value4':
+    rowData[5] = parseFloat(value); 
+    break;
+  }
+}
+    Logger.log(JSON.stringify(rowData));
+    var newRange = sheet.getRange(newRow, 1, 1, rowData.length);
+    newRange.setValues([rowData]);
+    return ContentService.createTextOutput("okeyr");
+}else 
+  {
+    return ContentService.createTextOutput("error");
+  }
+
+
+}
